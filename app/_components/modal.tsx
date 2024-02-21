@@ -21,7 +21,7 @@ export function Modal({ modalID, children }: ModalProps) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed w-full h-full top-0 left-0 bg-background-transparent" />
         <Dialog.Content>
-          <div className="p-4 rounded-md fixed w-11/12 top-1/2 left-1/2 bg-background-900 -translate-x-2/4 -translate-y-2/4">
+          <div className="p-4 rounded-md fixed w-11/12 top-1/2 max-w-[300px] left-1/2 bg-background-900 -translate-x-2/4 -translate-y-2/4">
             {children}
           </div>
         </Dialog.Content>

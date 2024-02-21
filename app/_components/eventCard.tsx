@@ -19,7 +19,11 @@ export function Event({
   const setOpenModalID = useModalStore((state) => state.setOpenModalID);
 
   return (
-    <article className="card" onClick={() => setOpenModalID(modalID)} {...rest}>
+    <article
+      className="card max-w-[400px]"
+      onClick={() => setOpenModalID(modalID)}
+      {...rest}
+    >
       <h3 className="mb-3">{title}</h3>
       <div className="flex w-full justify-between gap-2">
         <div className="py-2 w-full flex flex-col items-center justify-center rounded-md w-full font-bold bg-success-400 text-success-800">
