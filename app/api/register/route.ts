@@ -29,7 +29,7 @@ export async function POST(req: Request, res: Response) {
     if (errorMessages.length > 0) {
       return Response.json(errorMessages, { status: 400 });
     } else {
-      await collection.insertOne({ ...reqData });
+      await collection.insertOne({ ...reqData, points: 1000 });
 
       return Response.json(
         { message: "Data saved successfully!" },

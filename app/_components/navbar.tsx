@@ -30,9 +30,16 @@ export function Navbar() {
   return (
     <nav className="flex w-full p-4 items-center justify-between border-b-2 border-background-900">
       <MenuRoundedIcon onClick={() => setIsOpen(true)} />
-      <Link href="/perfil">
-        <h4>{meData?.username}</h4>
-      </Link>
+      <div className="flex items-center">
+        <h4 className="flex mr-4 items-center">
+          Você tem
+          <span className="font-bold mx-1">{meData?.points}</span>
+          pontos
+        </h4>
+        <Link href="/perfil">
+          <h4>{meData?.username}</h4>
+        </Link>
+      </div>
 
       {isOpen && (
         <>

@@ -14,6 +14,7 @@ const defaultSession: SessionData = {
   username: "",
   email: "",
   isLoggedIn: false,
+  points: 0,
 };
 
 // login
@@ -41,10 +42,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    session.isLoggedIn = true;
-    session.username = userData[0].user;
-    session.email = userData[0].email;
     session.id = userData[0]._id.toString();
+    session.email = userData[0].email;
+    session.username = userData[0].user;
+    session.isLoggedIn = true;
+    session.points = userData[0].points;
     await session.save();
 
     return Response.redirect(`${request.nextUrl.origin}/home`, 303);

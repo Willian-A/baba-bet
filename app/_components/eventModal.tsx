@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,21 +11,27 @@ import { EventProps } from "./eventCard";
 import { useToastStore } from "../_stores/toast";
 import { Spinner } from "./spinner";
 import { useModalStore } from "../_stores/modal";
+import { SessionData } from "../_types/sessionData";
 
 interface EventModalProps extends EventProps {
   selectOptions: Option[];
   selectPlaceholder: string;
-  betValuePlaceholder: string;
 }
 
-export const betSchema = z.object({
-  options: z.string(),
-  betValue: z.string(),
-  selectedOdd: z.string(),
-  oddValue: z.number(),
-});
+const betSchema = z
+  .object({
+    maxBetValue: z.number(),
+    options: z.string(),
+    betValue: z.string(),
+    selectedOdd: z.string(),
+    oddValue: z.number(),
+  })
+  .refine((data) => Number(data.maxBetValue) >= Number(data.betValue), {
+    message: "Você não tem essa quantia de pontos",
+    path: ["betValue"],
+  });
 
-export type BetSchemaType = z.infer<typeof betSchema>;
+type BetSchemaType = z.infer<typeof betSchema>;
 
 export function EventModal({
   modalID,
@@ -34,11 +40,39 @@ export function EventModal({
   negativeOdd,
   positiveOdd,
   selectPlaceholder,
-  betValuePlaceholder,
 }: EventModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const setToastProps = useToastStore((state) => state).setToastProps;
   const setOpenModalID = useModalStore((state) => state.setOpenModalID);
+  const [meData, setMeData] = useState<SessionData | undefined>();
+  //  const [bets, setBets] = useState();
+
+  //  const getBets = async () => {
+  //    try {
+  //      const res = await fetch(`/api/bets?id=${}`), {
+  //        method: "GET",
+  //      });
+  //      setBets(await res.json());
+  //    } catch (error) {
+  //      console.log(error);
+  //    }
+  //  };
+
+  const getMe = async () => {
+    try {
+      const res = await fetch("/api/login", {
+        method: "GET",
+      });
+      setMeData(await res.json());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getMe();
+    //getBets();
+  }, []);
 
   const {
     register,
@@ -50,6 +84,10 @@ export function EventModal({
     watch,
     formState: { errors },
   } = useForm<BetSchemaType>({ resolver: zodResolver(betSchema) });
+
+  useEffect(() => {
+    meData && setValue("maxBetValue", meData.points);
+  }, [meData]);
 
   const positiveOddColor =
     getValues("selectedOdd") === "positiveOdd"
@@ -93,7 +131,7 @@ export function EventModal({
         <Controller
           control={control}
           name="options"
-          render={({ field: { onChange, ref } }) => (
+          render={({ field: { onChange } }) => (
             <SelectInput
               options={selectOptions}
               placeholder={selectPlaceholder}
@@ -103,15 +141,21 @@ export function EventModal({
         />
 
         {!!watch("options") && (
-          <input
-            className="mt-2 max-w-[300px] input"
-            placeholder={betValuePlaceholder}
-            type="number"
-            {...register("betValue")}
-          />
+          <div className="mt-2">
+            <label>Digite o valor da aposta:</label>
+            <input
+              className="mt-2 max-w-[300px] input"
+              placeholder={`Você tem ${meData?.points} pontos`}
+              type="number"
+              {...register("betValue")}
+            />
+            <p className="mb-2 mt-1 px-1 text-error-400">
+              {errors.betValue?.message}
+            </p>
+          </div>
         )}
         {!!watch("options") && Number(watch("betValue")) > 0 && (
-          <div className="mt-2">
+          <div>
             <label>Selecione o resultado desejado:</label>
             <div className="flex w-full mt-1 justify-between gap-2">
               <div

@@ -41,7 +41,6 @@ export default function Home() {
             modalID={`event-${index}`}
             selectOptions={selectOptions}
             selectPlaceholder="Selecione um Convidado"
-            betValuePlaceholder="Digite o valor da Aposta"
             {...value}
           />
         </div>

@@ -3,4 +3,5 @@ export interface SessionData {
   email: string;
   username: string;
   isLoggedIn: boolean;
+  points: number;
 }
