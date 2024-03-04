@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { ToastProps } from "../_components/toast";
+import { ToastProps } from "../_components/Toast";
 import { persist } from "zustand/middleware";
 
 interface Toast {

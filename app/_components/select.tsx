@@ -1,17 +1,14 @@
 import * as Select from "@radix-ui/react-select";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-
-export type Option = {
-  value: string;
-  label: string;
-};
+import { EventInputOption } from "../_types/event";
 
 interface SelectProps {
-  options: Option[];
+  options: EventInputOption[];
   placeholder: string;
   onChange: (value: string) => void;
 }
+
 export function SelectInput({ options, placeholder, onChange }: SelectProps) {
   return (
     <Select.Root onValueChange={onChange}>

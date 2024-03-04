@@ -1,4 +1,4 @@
-import { Toast } from "./_components/toast";
+import { Toast } from "./_components/Toast";
 
 export default function RootLayout({
   children,

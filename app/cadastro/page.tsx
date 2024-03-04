@@ -9,7 +9,7 @@ import { registerSchema, RegisterSchemaType } from "./schemas/register";
 import { useToastStore } from "../_stores/toast";
 import { useRouter } from "next/navigation";
 import { errorType } from "../_types/error";
-import { Spinner } from "../_components/spinner";
+import { Spinner } from "../_components/Spinner";
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState(false);

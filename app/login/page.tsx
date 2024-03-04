@@ -9,7 +9,7 @@ import Link from "next/link";
 import { loginSchema, LoginSchemaType } from "./schemas/login";
 import { useToastStore } from "../_stores/toast";
 import { errorType } from "../_types/error";
-import { Spinner } from "../_components/spinner";
+import { Spinner } from "../_components/Spinner";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
