@@ -123,6 +123,7 @@ export function EventModal({
     setOpenModalID(null);
     setShowForm(false);
     reset();
+    getBets();
     return setToastProps({
       isOpen: true,
       description: "Aposta feita com sucesso",
@@ -130,9 +131,10 @@ export function EventModal({
     });
   }
 
-  const ShowBets = () => {
-    if (bets && !showForm) {
-      return (
+  return (
+    <Modal modalID={modalID}>
+      <h2 className="mb-4">{name}</h2>
+      {bets && !showForm ? (
         <>
           {bets.map((bet) => {
             const isLoseOdd = bet.selectedOdd === "loseOdd";
@@ -169,79 +171,72 @@ export function EventModal({
             Nova Aposta
           </button>
         </>
-      );
-    }
+      ) : (
+        <form onSubmit={handleSubmit(postData)}>
+          <Controller
+            control={control}
+            name="options"
+            render={({ field: { onChange } }) => (
+              <SelectInput
+                options={selectOptions}
+                placeholder={selectPlaceholder}
+                onChange={onChange}
+              />
+            )}
+          />
 
-    return (
-      <form onSubmit={handleSubmit(postData)}>
-        <Controller
-          control={control}
-          name="options"
-          render={({ field: { onChange } }) => (
-            <SelectInput
-              options={selectOptions}
-              placeholder={selectPlaceholder}
-              onChange={onChange}
-            />
+          {!!watch("options") && (
+            <div className="mt-2">
+              <label>Digite o valor da aposta:</label>
+              <input
+                className="mt-2 max-w-[300px] input"
+                placeholder={`Você tem ${meData?.points} pontos`}
+                type="number"
+                {...register("betValue")}
+              />
+              <p className="mb-2 mt-1 px-1 text-error-400">
+                {errors.betValue?.message}
+              </p>
+            </div>
           )}
-        />
 
-        {!!watch("options") && (
-          <div className="mt-2">
-            <label>Digite o valor da aposta:</label>
-            <input
-              className="mt-2 max-w-[300px] input"
-              placeholder={`Você tem ${meData?.points} pontos`}
-              type="number"
-              {...register("betValue")}
-            />
-            <p className="mb-2 mt-1 px-1 text-error-400">
-              {errors.betValue?.message}
-            </p>
-          </div>
-        )}
-        {!!watch("options") && Number(watch("betValue")) > 0 && (
-          <div>
-            <label>Selecione o resultado desejado:</label>
-            <div className="flex w-full mt-1 justify-between gap-2">
-              <div
-                className={`py-2 w-full flex flex-col items-center justify-center rounded-md w-full font-bold ${winOddColor}`}
-                onClick={() => {
-                  setValue("selectedOdd", "winOdd");
-                  setValue("oddValue", winOdd.value);
-                }}
-              >
-                <h5 className="mb-1">{winOdd.value}</h5>
-                <h4>{winOdd.label}</h4>
-              </div>
-              <div
-                className={`p-1 w-full flex flex-col items-center justify-center rounded-md w-full font-bold ${loseOddColor}`}
-                onClick={() => {
-                  setValue("selectedOdd", "loseOdd");
-                  setValue("oddValue", loseOdd.value);
-                }}
-              >
-                <h5 className="mb-1">{loseOdd.value}</h5>
-                <h4>{loseOdd.label}</h4>
+          {!!watch("options") && Number(watch("betValue")) > 0 && (
+            <div>
+              <label>Selecione o resultado desejado:</label>
+              <div className="flex w-full mt-1 justify-between gap-2">
+                <div
+                  className={`py-2 w-full flex flex-col items-center justify-center rounded-md w-full font-bold ${winOddColor}`}
+                  onClick={() => {
+                    setValue("selectedOdd", "winOdd");
+                    setValue("oddValue", winOdd.value);
+                  }}
+                >
+                  <h5 className="mb-1">{winOdd.value}</h5>
+                  <h4>{winOdd.label}</h4>
+                </div>
+                <div
+                  className={`p-1 w-full flex flex-col items-center justify-center rounded-md w-full font-bold ${loseOddColor}`}
+                  onClick={() => {
+                    setValue("selectedOdd", "loseOdd");
+                    setValue("oddValue", loseOdd.value);
+                  }}
+                >
+                  <h5 className="mb-1">{loseOdd.value}</h5>
+                  <h4>{loseOdd.label}</h4>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        {!!watch("options") &&
-          Number(watch("betValue")) > 0 &&
-          watch("selectedOdd") && (
-            <button className="btn-primary mt-6" type="submit">
-              {isLoading ? <Spinner /> : "Confirmar"}
-            </button>
           )}
-      </form>
-    );
-  };
 
-  return (
-    <Modal modalID={modalID}>
-      <h2 className="mb-4">{name}</h2>
-      <ShowBets />
+          {!!watch("options") &&
+            Number(watch("betValue")) > 0 &&
+            watch("selectedOdd") && (
+              <button className="btn-primary mt-6" type="submit">
+                {isLoading ? <Spinner /> : "Confirmar"}
+              </button>
+            )}
+        </form>
+      )}
     </Modal>
   );
 }
